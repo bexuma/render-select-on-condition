@@ -6,7 +6,22 @@ import { Container, FormContainer, Button } from "./styled";
 import { renderInput } from "../../utils";
 
 const Form = () => {
-  const form = useForm();
+  const form = useForm({
+    defaultValues: {
+      facultyId: {
+        value: 1,
+        label: "Факультет 1",
+      },
+      specialityId: {
+        value: 1,
+        label: "Специальность 1",
+      },
+      groupId: {
+        value: 2,
+        label: "Группа 2",
+      },
+    },
+  });
 
   const onSubmit = (data) => {
     console.log("result", data);

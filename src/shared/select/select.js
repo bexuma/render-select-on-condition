@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 
@@ -16,17 +16,43 @@ const customStyles = {
   }),
 };
 
+const usePrevious = (value) => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+};
+
 const Select = ({ details, form }) => {
   const {
     name,
     label,
-    defaultValue,
+    // defaultValue,
     options,
     resetOnChange,
-    renderIfPresent,
+    // renderIfPresent,
     required,
   } = details;
-  const { control, errors: formErrors, setValue, watch, unregister } = form;
+
+  const { control, errors: formErrors, watch, setValue } = form;
+
+  const resetOnChangeListener = watch(resetOnChange);
+  const resetOnChangeListenerPrevious = usePrevious(resetOnChangeListener);
+
+  // reset the value if the parent input has changed
+  useEffect(() => {
+    if (
+      resetOnChange &&
+      resetOnChangeListenerPrevious &&
+      resetOnChangeListenerPrevious !== resetOnChangeListener
+    ) {
+      // console.log(resetOnChangeListener);
+      // console.log(watch(resetOnChange));
+      // console.log(`Nullify ${name}`);
+      setValue(name, null);
+    }
+  }, [resetOnChangeListenerPrevious, resetOnChangeListener]);
 
   return (
     <Row>
@@ -40,7 +66,6 @@ const Select = ({ details, form }) => {
           name={name}
           control={control}
           onChange={([selected]) => selected}
-          defaultValue={defaultValue}
           placeholder="Выбрать из списка"
           rules={{ required }}
         />

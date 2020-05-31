@@ -7,6 +7,7 @@ const Container = styled.div`
 const FormContainer = styled.form`
   width: 50%;
   min-width: 480px;
+  margin: 0px auto;
 `;
 
 const Button = styled.button`
